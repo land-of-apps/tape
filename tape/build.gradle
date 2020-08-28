@@ -18,4 +18,20 @@ checkstyle {
   toolVersion = '7.7'
 }
 
+test {
+  ignoreFailures = true
+  systemProperty 'appmap.debug', true
+  systemProperty 'appmap.config.file', "$rootDir/appmap.yml"
+  systemProperty 'appmap.output.directory', "$rootDir/tmp/appmap"
+  def agentLocation = "$rootDir/appmap.jar"
+  def appmapAgent = "-javaagent:".concat(agentLocation)
+  if (!jvmArgs.contains(appmapAgent))
+    jvmArgs += appmapAgent
+
+  maxParallelForks Runtime.runtime.availableProcessors() * 2
+  testLogging {
+    exceptionFormat = 'full'
+  }
+}
+
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
