@@ -1,7 +1,7 @@
 language: android
 
 jdk:
- - oraclejdk7
+ - openjdk8
 maven: 
   version: 3.2.3
 
