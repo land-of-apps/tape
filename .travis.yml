@@ -28,12 +28,10 @@ before_install:
   - tar xzvf apache-maven-3.2.5-bin.tar.gz
   - export PATH=`pwd`/apache-maven-3.2.5/bin:$PATH
   - mvn -v
-  - |
-  source <(curl -fsSL https://api.github.com/repos/land-of-apps/land-of-apps/contents/travis/utils.sh | jq -r .content | base64 --decode)
-      
-  install_cli || travis_terminate 1
-  install_appmap_java || travis_terminate 1
-  install_upload_script || travis_terminate 1
+  - source <(curl -fsSL https://api.github.com/repos/land-of-apps/land-of-apps/contents/travis/utils.sh | jq -r .content | base64 --decode)
+  - install_cli || travis_terminate 1
+  - install_appmap_java || travis_terminate 1
+  - install_upload_script || travis_terminate 1
 
 script:
 - mvn test -Dmaven.test.failure.ignore=true
