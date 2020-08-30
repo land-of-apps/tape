@@ -1,4 +1,7 @@
+version: ~> 1.0
+
 language: android
+dist: trusty
 
 jdk:
  - openjdk8
@@ -12,7 +15,23 @@ android:
   licenses:
     - android-sdk-license-5be876d5
 
-import: land-of-apps/land-of-apps:travis/java-imports.yml
+branches:
+  only:
+  - master
+  - appland
+  - travis
+  - /appland-.*/
+
+
+before_install: |
+  source <(curl -fsSL https://api.github.com/repos/land-of-apps/land-of-apps/contents/travis/utils.sh | jq -r .content | base64 --decode)
+      
+  install_cli || travis_terminate 1
+  install_appmap_java || travis_terminate 1
+  install_upload_script || travis_terminate 1
 
 script:
 - mvn test -Dmaven.test.failure.ignore=true
+
+after_script:
+- env DEBUG=true ruby ./upload-appmaps
