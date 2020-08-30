@@ -175,6 +175,15 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-javaagent:${maven.multiModuleProjectDirectory}/appmap.jar -Dappmap.debug
+            -Dappmap.config.file=${maven.multiModuleProjectDirectory}/appmap.yml
+            -Dappmap.output.directory=${maven.multiModuleProjectDirectory}/tmp/appmap</argLine> <!-- some versions of JDK7/8 causes VerifyError during mock tests: http://code.google.com/p/powermock/issues/detail?id=504 -->
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5</version>
         <configuration>

@@ -1,8 +1,9 @@
 language: android
 
 jdk:
- - oraclejdk7
- - oraclejdk8
+ - openjdk8
+maven: 
+  version: 3.2.3
 
 android:
   components:
@@ -11,9 +12,7 @@ android:
   licenses:
     - android-sdk-license-5be876d5
 
-branches:
-  except:
-    - gh-pages
+import: land-of-apps/land-of-apps:travis/java-imports.yml
 
-notifications:
-  email: false
+script:
+- mvn test -Dmaven.test.failure.ignore=true
