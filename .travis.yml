@@ -13,7 +13,7 @@ android:
     - build-tools-20.0.0
     - android-16
   licenses:
-    - android-sdk-license-5be876d5
+    - android-sdk-license-.+
 
 branches:
   only:
