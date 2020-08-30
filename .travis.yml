@@ -1,18 +1,37 @@
-language: java
+version: ~> 1.0
+
+language: android
+dist: trusty
+
+jdk:
+ - openjdk8
+maven: 
+  version: 3.2.3
+
+android:
+  components:
+    - build-tools-20.0.0
+    - android-16
+  licenses:
+    - android-sdk-license-.+
 
 branches:
-  except:
-    - gh-pages
+  only:
+  - master
+  - appland
+  - travis
+  - /appland-.*/
 
-notifications:
-  email: false
 
 before_install:
-  - wget http://dl.google.com/android/android-sdk_r21.0.1-linux.tgz
-  - tar -zxf android-sdk_r21.0.1-linux.tgz
-  - export ANDROID_HOME=~/builds/square/tape/android-sdk-linux
-  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-  - TOOLS=$(android list sdk --no-ui | grep "Android SDK Platform-tools" | cut -d"-" -f1)
-  - android update sdk --filter "$TOOLS" --no-ui --force
-  - SDK=$(android list sdk --no-ui | grep ", API 16," | cut -d"-" -f1)
-  - android update sdk --filter "$SDK" --no-ui --force
+  - mvn -N io.takari:maven:wrapper -Dmaven=3.2.3
+  - source <(curl -fsSL https://api.github.com/repos/land-of-apps/land-of-apps/contents/travis/utils.sh | jq -r .content | base64 --decode)
+  - install_cli || travis_terminate 1
+  - install_appmap_java || travis_terminate 1
+  - install_upload_script || travis_terminate 1
+
+script:
+- ./mvnw test -Dmaven.test.failure.ignore=true
+
+after_script:
+- env DEBUG=true ruby ./upload-appmaps
