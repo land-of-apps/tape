@@ -24,8 +24,8 @@ branches:
 
 
 before_install:
-  - mvn -N io.takari:maven:3.2.3:wrapper
-  - mvn -v
+  - mvn -N io.takari:maven:wrapper -Dmaven=3.2.3
+  - ./mvnw -v
   - source <(curl -fsSL https://api.github.com/repos/land-of-apps/land-of-apps/contents/travis/utils.sh | jq -r .content | base64 --decode)
   - install_cli || travis_terminate 1
   - install_appmap_java || travis_terminate 1
