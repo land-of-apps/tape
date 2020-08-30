@@ -1,13 +1,37 @@
-language: java
+version: ~> 1.0
 
-jdk: oraclejdk7
+language: android
+dist: trusty
+
+jdk:
+ - openjdk8
+maven: 
+  version: 3.2.3
+
+android:
+  components:
+    - build-tools-20.0.0
+    - android-16
+  licenses:
+    - android-sdk-license-.+
+
+branches:
+  only:
+  - master
+  - appland
+  - travis
+  - /appland-.*/
+
 
 before_install:
-  - export TERM=dumb
-  - sudo apt-get install -qq libstdc++6:i386 lib32z1
-  - export COMPONENTS=build-tools-19.0.1,android-16
-  - curl -L https://raw.github.com/embarkmobile/android-sdk-installer/version-1/android-sdk-installer | bash /dev/stdin --install=$COMPONENTS
-  - source ~/.android-sdk-installer/env
+  - mvn -N io.takari:maven:wrapper -Dmaven=3.2.3
+  - source <(curl -fsSL https://api.github.com/repos/land-of-apps/land-of-apps/contents/travis/utils.sh | jq -r .content | base64 --decode)
+  - install_cli || travis_terminate 1
+  - install_appmap_java || travis_terminate 1
+  - install_upload_script || travis_terminate 1
 
-notifications:
-  email: false
+script:
+- ./mvnw test -Dmaven.test.failure.ignore=true
+
+after_script:
+- env DEBUG=true ruby ./upload-appmaps
